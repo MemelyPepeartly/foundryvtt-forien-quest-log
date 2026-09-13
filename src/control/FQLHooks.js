@@ -37,7 +37,7 @@ import {
  * - `getSceneControlButtons` - {@link FQLHooks.getSceneControlButtons} - Add FQL scene controls to 'note'.
  * - `hotbarDrop` - {@link FQLHooks.hotbarDrop} - Handle {@link Quest} drops to the macro hotbar.
  * - `renderJournalDirectory` - {@link FQLHooks.renderJournalDirectory} - Add 'open quest log' / show FQL folder.
- * - `renderJournalSheet` - {@link FQLHooks.renderJournalSheet} - Hide FQL directory from journal sheet option items.
+ * - `renderJournalEntrySheet` - {@link FQLHooks.renderJournalSheet} - Hide FQL directory from journal sheet option items.
  *
  * FQL hooks (response):
  * - `ForienQuestLog.Open.QuestLog` - {@link FQLHooks.openQuestLog} - Open the quest log.
@@ -74,6 +74,8 @@ export class FQLHooks
       Hooks.on('getSceneControlButtons', FQLHooks.getSceneControlButtons);
       Hooks.on('hotbarDrop', FQLHooks.hotbarDrop);
       Hooks.on('renderJournalDirectory', FQLHooks.renderJournalDirectory);
+      Hooks.on('renderJournalEntrySheet', FQLHooks.renderJournalSheet);
+      // Retain support for legacy journal sheets supplied by other modules.
       Hooks.on('renderJournalSheet', FQLHooks.renderJournalSheet);
 
       // FQL specific hooks.
@@ -475,22 +477,24 @@ export class FQLHooks
     */
    static renderJournalDirectory(app, html)
    {
-      if (game.user.isGM || !game.settings.get(constants.moduleName, settings.hideFQLFromPlayers))
+      if ((game.user.isGM || !game.settings.get(constants.moduleName, settings.hideFQLFromPlayers)) &&
+       !html.querySelector('.quest-log-btn'))
       {
-         const button = document.createElement('button');
-         button.classList.add("quest-log-btn");
+         const button = html.ownerDocument.createElement('button');
+         button.type = 'button';
+         button.classList.add('quest-log-btn');
          button.innerText = game.i18n.localize('ForienQuestLog.QuestLog.Title');
 
          let footer = html.querySelector('.directory-footer');
-         if (footer.length === 0)
+         if (!footer)
          {
-            footer = document.createElement("footer");
-            footer.classList.add("directory-footer");
+            footer = html.ownerDocument.createElement('footer');
+            footer.classList.add('directory-footer');
             html.append(footer);
          }
          footer.append(button);
 
-         button.addEventListener("click", () => ViewManager.questLog.render(true));
+         button.addEventListener('click', () => ViewManager.questLog.render(true));
       }
 
       if (!(game.user.isGM && game.settings.get(constants.moduleName, settings.showFolder)))
@@ -498,11 +502,7 @@ export class FQLHooks
          const folder = Utils.getQuestFolder();
          if (folder !== void 0)
          {
-            const element = html.querySelector(`.folder[data-folder-id="${folder.id}"]`);
-            if (element !== void 0)
-            {
-               element.remove();
-            }
+            html.querySelector(`.folder[data-folder-id="${folder.id}"]`)?.remove();
          }
       }
    }
@@ -511,9 +511,9 @@ export class FQLHooks
     * Remove option item for quest journal folder when any journal entry is rendered. This prevents users from placing
     * non-quest journals into the quest journal folder.
     *
-    * @param {JournalSheet}   app - The JournalSheet app.
+    * @param {JournalEntrySheet|JournalSheet} app - The journal sheet app.
     *
-    * @param {JQuery}         html - The jQuery element for the window content of the app.
+    * @param {HTMLElement|JQuery} html - The rendered journal sheet content.
     *
     * @see https://foundryvtt.com/api/classes/client.JournalSheet.html
     */
@@ -522,9 +522,9 @@ export class FQLHooks
       const folder = Utils.getQuestFolder();
       if (folder)
       {
-         const option = html.find(`option[value="${folder.id}"]`);
-
-         if (option) { option.remove(); }
+         const element = html.jquery ? html[0] : html;
+         element.querySelectorAll(`select[name="folder"] option[value="${folder.id}"]`)
+          .forEach((option) => option.remove());
       }
    }
 

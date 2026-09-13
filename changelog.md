@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Permit Foundry V14 while retaining V13 support; in-world V14 verification is pending.
+- Fix quest ownership submission and window positioning for ApplicationV2.
+- Fix journal directory buttons and quest-folder filtering with current journal render hooks and native DOM elements.
+- Use current application focus and registry APIs for actor, reward, and image windows.
+- Replace reward image popouts when their source changes, respecting immutable ApplicationV2 options.
+- Restore tracker docking bounds from the current sidebar position and collapsed state.
+- Add compatibility regression tests and a [V14 validation checklist](V14-COMPATIBILITY.md).
+
 ## Release 0.9.0
 - Compatibility with Foundry v13
   - This does not include migration to ApplicationV2 as that will take longer and 

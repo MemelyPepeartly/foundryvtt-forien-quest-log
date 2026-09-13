@@ -31,6 +31,7 @@
   },
   "browserslist": [">5%", "not IE 11"],
   "scripts": {
+    "test": "node --test tests/*.test.js",
     "build-css": "sass ./styles/init.scss ./css/init.css && postcss ./css/init.css -p sass -u autoprefixer postcss-preset-env cssnano -m -o ./css/init.css",
     "eslint": "eslint .",
     "rollup-external": "rollup --config"

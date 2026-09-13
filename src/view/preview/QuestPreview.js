@@ -155,7 +155,7 @@ export class QuestPreview extends foundry.appv1.api.FormApplication
        * Tracks all opened sheets whether quest giver actor sheet or reward items. Close all sheets when QuestPreview
        * closes.
        *
-       * @type {number[]}
+       * @type {(number|string)[]}
        * @package
        */
       this._openedAppIds = [];
@@ -555,7 +555,7 @@ export class QuestPreview extends foundry.appv1.api.FormApplication
       // Close any opened actor or reward item sheets.
       for (const appId of this._openedAppIds)
       {
-         const app = ui.windows[appId];
+         const app = ui.windows[appId] ?? foundry.applications.instances.get(appId);
          if (app && app.rendered) { app.close(); }
       }
 

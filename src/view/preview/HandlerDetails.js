@@ -690,24 +690,21 @@ export class HandlerDetails
 
       const reward = quest.getReward(uuidv4);
 
-      if (reward && (questPreview.canEdit || !reward.locked))
+      if (reward?.data?.img?.length && (questPreview.canEdit || !reward.locked))
       {
-         if (questPreview._rewardImagePopup !== void 0 && questPreview._rewardImagePopup.rendered)
+         const popup = questPreview._rewardImagePopup;
+         if (popup?.rendered && popup.options.src === reward.data.img)
          {
-            if (reward.data?.img?.length)
-            {
-               questPreview._rewardImagePopup.object = reward.data.img;
-               questPreview._rewardImagePopup.render(true);
-               questPreview._rewardImagePopup.bringToTop();
-            }
+            popup.bringToFront();
          }
          else
          {
-            if (reward.data?.img?.length)
-            {
-               questPreview._rewardImagePopup = new ImagePopout(reward.data.img, { shareable: true });
-               questPreview._rewardImagePopup.render(true);
-            }
+            // ApplicationV2 options are immutable, so a different image needs a new popout.
+            const replacement = new foundry.applications.apps.ImagePopout({ src: reward.data.img });
+            questPreview._rewardImagePopup = replacement;
+            await popup?.close();
+            // Another image selection or closing the quest may supersede this request during the close animation.
+            if (questPreview._rewardImagePopup === replacement) { replacement.render({ force: true }); }
          }
       }
    }
@@ -800,12 +797,12 @@ export class HandlerDetails
    {
       if (questPreview._splashImagePopup !== void 0 && questPreview._splashImagePopup.rendered)
       {
-         questPreview._splashImagePopup.bringToTop();
+         questPreview._splashImagePopup.bringToFront();
       }
       else
       {
-         questPreview._splashImagePopup = new ImagePopout(quest.splash, { shareable: true });
-         questPreview._splashImagePopup.render(true);
+         questPreview._splashImagePopup = new foundry.applications.apps.ImagePopout({ src: quest.splash });
+         questPreview._splashImagePopup.render({ force: true });
       }
    }
 
