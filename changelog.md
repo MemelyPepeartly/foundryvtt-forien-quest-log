@@ -8,7 +8,7 @@
 - Use current application focus and registry APIs for actor, reward, and image windows.
 - Replace reward image popouts when their source changes, respecting immutable ApplicationV2 options.
 - Restore tracker docking bounds from the current sidebar position and collapsed state.
-- Add compatibility regression tests and a [V14 validation checklist](V14-COMPATIBILITY.md).
+- Document API changes and a [V14 validation checklist](V14-COMPATIBILITY.md).
 
 ## Release 0.9.0
 - Compatibility with Foundry v13

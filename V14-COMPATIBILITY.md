@@ -28,24 +28,10 @@ instance and serialization APIs remain available, so no editor rewrite is includ
 See [TinyMCE removal](https://foundryvtt.com/releases/14.354) and the
 [JournalEntry API](https://foundryvtt.com/api/v14/classes/foundry.documents.JournalEntry.html).
 
-## Automated validation
+## Validation
 
-Use Node.js 22 or newer:
-
-```sh
-npm install --ignore-scripts --no-package-lock
-npm test
-npm run eslint
-```
-
-The tests import the module's real source with narrow Foundry API stubs. They exercise journal render hooks,
-ownership submission and permission changes, V1/V2 sheet tracking, immutable image-popout options, and tracker docking.
-They do **not** emulate Foundry's renderer, document server, socket synchronization, or a game system.
-The changed JavaScript and tests pass targeted ESLint. Repository-wide ESLint also reports existing errors in
+The changed JavaScript passes targeted ESLint and syntax checks. Repository-wide ESLint reports existing errors in
 `src/control/db/Enrich.js` (shadowing `TextEditor`) and `src/view/internal/context-options.js` (import spacing).
-
-Validation completed: 17 passing tests, syntax checks for all 46 source/test JavaScript files, and `git diff --check`.
-The repository-wide lint findings were reproduced against the unchanged `HEAD` versions of the affected files.
 
 The module loads source ES modules directly, and this change does not alter styles or bundled dependencies.
 No CSS or vendor rebuild is required.
