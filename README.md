@@ -18,6 +18,10 @@ This module provides comprehensive Quest Log system for players and Game Masters
 
 ### Compatibility
 
+The working tree includes an unreleased Foundry V14 compatibility update targeting **14.367**.
+See [V14 compatibility notes](V14-COMPATIBILITY.md) for the API changes, automated checks, and in-world
+validation checklist. The manifest permits V13 and V14; its verified version remains V13 pending in-world validation.
+
 | Foundry Version | Module Version |
 |-----------------|----------------|
 | v13             | v0.9.*         |

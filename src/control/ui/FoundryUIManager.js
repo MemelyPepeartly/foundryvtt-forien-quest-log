@@ -205,7 +205,7 @@ export class FoundryUIManager
       Hooks.on('renderQuestTracker', this.#handleQuestTrackerRendered);
       Hooks.on('updateQuestTrackerState', this.#updateQuestTrackerState);
 
-      // FoundryUIManager.#uiState.sidebar.currentCollapsed = !ui?.sidebar?.expanded || false;
+      FoundryUIManager.#uiState.sidebar.currentCollapsed = ui?.sidebar?.expanded === false;
       this.#storeState();
 
       FoundryUIManager.updateTrackerPinned();
@@ -318,7 +318,7 @@ export class FoundryUIManager
       const tracker = ViewManager.questTracker;
 
       // Make sure the tracker is rendered or rendering.
-      if (!tracker.rendered && Application.RENDER_STATES.RENDERING !== tracker._state) { return; }
+      if (!tracker.rendered && foundry.appv1.api.Application.RENDER_STATES.RENDERING !== tracker._state) { return; }
 
       const boundaries = FoundryUIManager.#uiState.boundaries;
 
@@ -479,6 +479,7 @@ export class FoundryUIManager
          sidebarData.height = sidebarRect.height + sidebarData.gapY;
 
          FoundryUIManager.#uiState.boundaries.rectDock.x = sidebarData.left - FoundryUIManager.#uiState.boundaries.rectDock.width;
+         FoundryUIManager.#uiState.boundaries.top = sidebarData.top;
          FoundryUIManager.#uiState.boundaries.right = sidebarData.left;
       }
 

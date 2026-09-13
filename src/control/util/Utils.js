@@ -366,7 +366,7 @@ export class Utils
     *
     * @param {...*}           [opts.options] - Options to pass to sheet render method.
     *
-    * @returns {Promise<number|null>} The appId if rendered otherwise null.
+    * @returns {Promise<number|string|null>} The application ID if rendered otherwise null.
     */
    static async showSheetFromUUID(data, { permissionCheck = true, ...options } = {})
    {
@@ -392,13 +392,13 @@ export class Utils
          {
             if (document.sheet.rendered)
             {
-               document.sheet.bringToTop();
+               document.sheet.bringToFront();
                return null;
             }
             else
             {
                document.sheet.render(true, options);
-               return document.sheet.appId;
+               return document.sheet.appId ?? document.sheet.id;
             }
          }
       }

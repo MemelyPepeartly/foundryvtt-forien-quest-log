@@ -51,19 +51,21 @@ export class HandlerManage
    {
       if (quest.entry)
       {
+         const position = {
+            top: Math.min(questPreview.position.top, window.innerHeight - 350),
+            left: questPreview.position.left + 125
+         };
+
          if (!questPreview._ownershipControl)
          {
-            questPreview._ownershipControl = new FQLDocumentOwnershipConfig(quest.entry, {
-               top: Math.min(questPreview.position.top, window.innerHeight - 350),
-               left: questPreview.position.left + 125
+            questPreview._ownershipControl = new FQLDocumentOwnershipConfig({
+               document: quest.entry,
+               position
             });
          }
 
-         questPreview._ownershipControl.render(true, {
-            top: Math.min(questPreview.position.top, window.innerHeight - 350),
-            left: questPreview.position.left + 125,
-            focus: true
-         });
+         await questPreview._ownershipControl.render({ force: true, position });
+         questPreview._ownershipControl?.bringToFront();
       }
    }
 
